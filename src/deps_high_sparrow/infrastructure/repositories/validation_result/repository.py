@@ -17,12 +17,12 @@ class ValidationResultRepository(IValidationResultRepository):
         self._db = database
 
     def validation_result_of_id(self, entity_id: str, tenant_id: str) -> Optional[ValidationResult]:
-        select_query = select([validation_result_table]).where(
+        select_query = select(validation_result_table).where(
             and_(validation_result_table.c.id == entity_id, validation_result_table.c.tenant_id == tenant_id)
         )
 
         with self._db.connection() as conn:
-            result = conn.execute(select_query).fetchone()
+            result = conn.execute(select_query).mappings().fetchone()
 
         if result is None:
             return None
